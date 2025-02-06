@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Empresa;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 
 class OnboardForm extends Component
@@ -52,6 +53,7 @@ class OnboardForm extends Component
     {
         $this->validateStep();
 
+
         $user = User::updateOrCreate(
             ['id' => $this->user_id],
             [
@@ -60,8 +62,8 @@ class OnboardForm extends Component
                 'email' => $this->user_email,
             ]
         );
-
         Empresa::create([
+            'id' => Str::uuid(),
             'fk_user' => $user->id,
             'company_name' => $this->company_name,
             'cnpj' => $this->cnpj,

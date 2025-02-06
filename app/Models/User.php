@@ -10,6 +10,11 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
 
+    use HasFactory, Notifiable;
+
+    public $incrementing = false; // Desativa incremento automático
+    protected $keyType = 'string'; // Define o tipo da chave primária como string (para UUID)
+
     protected $fillable = [
         'id',
         'nickname',
