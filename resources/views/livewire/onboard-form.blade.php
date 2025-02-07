@@ -18,22 +18,36 @@
                 <!-- Primeira bolinha com SVG de check -->
                 <div
                     class="relative flex items-center justify-center w-7 h-7 bg-white border border-gray-300 rounded-full">
-                    <img src="{{ asset('img/check.svg') }}" class="w-3 h-3" alt="Check">
+                        <img src="{{ asset('img/check.svg') }}" class="w-3 h-3" alt="Check">
                 </div>
                 <div class="w-8 h-px bg-gray-300"></div>
 
                 <!-- Segunda bolinha destacada -->
-                <div
-                    class="relative flex items-center justify-center w-7 h-7 bg-white border-8 border-gray-300 rounded-full">
-                </div>
-                <div class="absolute top-8 transform translate-x-1/2 text-xs font-bold text-gray-600">
-                    Visão Geral do Negócio
-                </div>
-                <div class="w-8 h-px bg-gray-300"></div>
-                <!-- Terceira bolinha condicional -->
-                <div class="relative flex items-center justify-center w-7 h-7 bg-white rounded-full 
-                    border border-gray-300 ">
-                </div>
+                @if($currentStep >= 2)
+                    <div
+                        class="relative flex items-center justify-center w-7 h-7 bg-white border border-gray-300 rounded-full">
+                            <img src="{{ asset('img/check.svg') }}" class="w-3 h-3" alt="Check">
+                    </div>
+                    <div class="w-8 h-px bg-gray-300"></div>
+                    <div
+                        class="relative flex items-center justify-center w-7 h-7 bg-white border-8 border-gray-300 rounded-full">
+                    </div>
+                    <div class="absolute top-8 left-1/2 translate-x-3/4 md:left-auto md:translate-x-[120px] text-xs font-bold text-gray-600">
+                        Localização do Negócio
+                    </div>
+                @else
+                    <div
+                        class="relative flex items-center justify-center w-7 h-7 bg-white border-8 border-gray-300 rounded-full">
+                    </div>
+                    <div class="absolute top-8 transform translate-x-1/2 text-xs font-bold text-gray-600">
+                        Visão Geral do Negócio
+                    </div>
+                    <div class="w-8 h-px bg-gray-300"></div>
+                    <!-- Terceira bolinha condicional -->
+                    <div class="relative flex items-center justify-center w-7 h-7 bg-white rounded-full 
+                        border border-gray-300 ">
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -144,28 +158,36 @@
                         <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
-                <div class="relative mt-6">
-                    <input type="text" id="number" placeholder="Número" wire:model="number"
-                        class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
-                    <label for="number"
-                        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 left-2 origin-left bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">
-                        Número
-                    </label>
-                    @error('number')
-                        <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
+
+                <!-- Container para Número e Complemento -->
+                <div class="grid grid-cols-4 gap-4 mt-6">
+                    <!-- Campo Número (1/4 da largura) -->
+                    <div class="relative col-span-1">
+                        <input type="text" id="number" placeholder="Número" wire:model="number"
+                            class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
+                        <label for="number"
+                            class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 left-2 origin-left bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">
+                            Nº
+                        </label>
+                        @error('number')
+                            <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Campo Complemento (3/4 da largura) -->
+                    <div class="relative col-span-3">
+                        <input type="text" id="complement" placeholder="Complemento" wire:model="complement"
+                            class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
+                        <label for="complement"
+                            class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 left-2 origin-left bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">
+                            Complemento
+                        </label>
+                        @error('complement')
+                            <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
-                <div class="relative mt-6">
-                    <input type="text" id="complement" placeholder="Complemento" wire:model="complement"
-                        class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
-                    <label for="complement"
-                        class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 left-2 origin-left bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">
-                        Complemento
-                    </label>
-                    @error('complement')
-                        <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
+
                 <div class="relative mt-6">
                     <input type="text" id="neighborhood" placeholder="Bairro" wire:model="neighborhood"
                         class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
@@ -189,25 +211,6 @@
                     @enderror
                 </div>
             </div>
-
-            <div class="flex justify-center">
-                <button type="button" wire:click="previousStep"
-                    class="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md flex items-center justify-between mr-2">
-                    <span class="font-bold uppercase">Voltar</span>
-                </button>
-                <button type="button" wire:click="nextStep"
-                    class="mt-4 px-4 py-2 bg-[#1F64BD] text-white rounded-md flex items-center justify-between">
-                    <span class="font-bold uppercase">Próximo</span>
-                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
-        <!-- Etapa 3: Redes Sociais e Website -->
-        @if ($currentStep == 3)
             <div>
                 <div class="relative mt-6">
                     <input type="text" id="social_media" placeholder="Redes Sociais" wire:model="social_media"

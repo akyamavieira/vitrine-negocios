@@ -10,7 +10,7 @@
         </a>
     </div>
     <div
-        class="bg-white px-6 pt-6 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10 mx-8">
+        class="bg-white px-6 pt-6 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-xl sm:px-10 mx-8 max-w-[860px]">
         <div class="w-full">
             <div class="mt-5">
                 @livewire('onboard-form')
