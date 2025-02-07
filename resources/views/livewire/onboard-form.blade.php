@@ -18,7 +18,7 @@
                 <!-- Primeira bolinha com SVG de check -->
                 <div
                     class="relative flex items-center justify-center w-7 h-7 bg-white border border-gray-300 rounded-full">
-                        <img src="{{ asset('img/check.svg') }}" class="w-3 h-3" alt="Check">
+                    <img src="{{ asset('img/check.svg') }}" class="w-3 h-3" alt="Check">
                 </div>
                 <div class="w-8 h-px bg-gray-300"></div>
 
@@ -26,13 +26,14 @@
                 @if($currentStep >= 2)
                     <div
                         class="relative flex items-center justify-center w-7 h-7 bg-white border border-gray-300 rounded-full">
-                            <img src="{{ asset('img/check.svg') }}" class="w-3 h-3" alt="Check">
+                        <img src="{{ asset('img/check.svg') }}" class="w-3 h-3" alt="Check">
                     </div>
                     <div class="w-8 h-px bg-gray-300"></div>
                     <div
                         class="relative flex items-center justify-center w-7 h-7 bg-white border-8 border-gray-300 rounded-full">
                     </div>
-                    <div class="absolute top-8 left-1/2 translate-x-3/4 md:left-auto md:translate-x-[120px] text-xs font-bold text-gray-600">
+                    <div
+                        class="absolute top-8 left-1/2 translate-x-3/4 md:left-auto md:translate-x-[120px] text-xs font-bold text-gray-600">
                         Localização do Negócio
                     </div>
                 @else
@@ -45,7 +46,7 @@
                     <div class="w-8 h-px bg-gray-300"></div>
                     <!-- Terceira bolinha condicional -->
                     <div class="relative flex items-center justify-center w-7 h-7 bg-white rounded-full 
-                        border border-gray-300 ">
+                            border border-gray-300 ">
                     </div>
                 @endif
             </div>
@@ -136,17 +137,27 @@
         <!-- Etapa 2: Endereço da Empresa -->
         @if ($currentStep == 2)
             <div>
+                <!-- Campo de CEP com Loading Spinner -->
                 <div class="relative mt-6">
-                    <input type="text" id="cep" placeholder="CEP" wire:model="cep"
+                    <input type="text" id="cep" placeholder="CEP" wire:model.defer="cep" wire:keydown.enter="searchAddress"
                         class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
                     <label for="cep"
                         class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 left-2 origin-left bg-white px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-1/2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-blue-600">
                         CEP
                     </label>
+
+                    <!-- Ícone de Loading -->
+                    <span wire:loading wire:target="searchAddress"
+                        class="absolute right-3 top-3 text-blue-500 animate-spin">
+                        ⏳
+                    </span>
+
                     @error('cep')
                         <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <!-- Campos de Endereço -->
                 <div class="relative mt-6">
                     <input type="text" id="street" placeholder="Rua" wire:model="street"
                         class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
@@ -159,9 +170,8 @@
                     @enderror
                 </div>
 
-                <!-- Container para Número e Complemento -->
+                <!-- Número e Complemento -->
                 <div class="grid grid-cols-4 gap-4 mt-6">
-                    <!-- Campo Número (1/4 da largura) -->
                     <div class="relative col-span-1">
                         <input type="text" id="number" placeholder="Número" wire:model="number"
                             class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
@@ -174,7 +184,6 @@
                         @enderror
                     </div>
 
-                    <!-- Campo Complemento (3/4 da largura) -->
                     <div class="relative col-span-3">
                         <input type="text" id="complement" placeholder="Complemento" wire:model="complement"
                             class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
@@ -199,6 +208,7 @@
                         <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+
                 <div class="relative mt-6">
                     <input type="text" id="city" placeholder="Cidade" wire:model="city"
                         class="peer mt-1 w-full border-2 border-gray-300 px-4 py-2 rounded-md placeholder:text-transparent focus:border-blue-600 focus:outline-none" />
@@ -211,6 +221,7 @@
                     @enderror
                 </div>
             </div>
+
             <div>
                 <div class="relative mt-6">
                     <input type="text" id="social_media" placeholder="Redes Sociais" wire:model="social_media"

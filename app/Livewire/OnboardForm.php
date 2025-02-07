@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Support\Str;
+use App\Services\CepService;
 
 
 class OnboardForm extends Component
@@ -28,14 +29,36 @@ class OnboardForm extends Component
     public $social_media;
     public $website;
     public $currentStep = 1;
-
+    public $loading = false;
     public function mount()
     {
         $user = session('userDTO');
-        $this->user_id = $user->id;
-        $this->user_nickname = $user->nickname;
-        $this->user_name = $user->name;
-        $this->user_email = $user->email;
+    
+        if (!$user) {
+            return redirect()->route('login'); // Redireciona para login se não houver sessão
+        }
+    
+        $this->user_id = $user->id ?? null;
+        $this->user_nickname = $user->nickname ?? '';
+        $this->user_name = $user->name ?? '';
+        $this->user_email = $user->email ?? '';
+    }
+    public function searchAddress()
+    {
+        $this->resetErrorBag('cep');
+        $this->loading = true; // Inicia o loading
+    
+        $data = CepService::buscarEndereco($this->cep);
+    
+        if (!$data) {
+            $this->addError('cep', 'CEP não encontrado ou inválido.');
+        } else {
+            $this->street = $data['logradouro'] ?? '';
+            $this->neighborhood = $data['bairro'] ?? '';
+            $this->city = $data['localidade'] ?? '';
+        }
+    
+        $this->loading = false; // Finaliza o loading
     }
 
     public function nextStep()
