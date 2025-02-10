@@ -113,6 +113,7 @@ class OnboardForm extends Component
         $formRequest = new OnboardFormRequest();
         $rules = $formRequest->rules();
         $messages = $formRequest->messages();
+        $attributes = $formRequest->attributes();
 
         // Converte a string de regras do CNPJ em um array
         $cnpjRules = is_array($rules['cnpj']) ? $rules['cnpj'] : explode('|', $rules['cnpj']);
@@ -148,7 +149,7 @@ class OnboardForm extends Component
             ],
         ];
 
-        $this->validate($stepRules[$this->currentStep], $messages);
+        $this->validate($stepRules[$this->currentStep], $messages, $attributes);
     }
     public function render()
     {
