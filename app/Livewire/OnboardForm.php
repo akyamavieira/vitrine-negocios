@@ -7,6 +7,8 @@ use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Services\CepService;
+use App\Services\CnpjService;
+use Exception;
 
 
 class OnboardForm extends Component
@@ -89,7 +91,13 @@ class OnboardForm extends Component
             'id' => Str::uuid(),
             'fk_user' => $user->id,
             'company_name' => $this->company_name,
-            'cnpj' => $this->cnpj,
+            'cnpj' => ['required', 'string', 'max:18', function ($attribute, $value, $fail) {
+                try {
+                    CnpjService::consultarCnpj($value);
+                } catch (Exception $e) {
+                    $fail($e->getMessage());
+                }
+            }],
             'size' => $this->size,
             'industry' => $this->industry,
             'about' => $this->about,
