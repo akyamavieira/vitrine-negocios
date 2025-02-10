@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Services\CepService;
 use App\Services\CnpjService;
+use App\Http\Requests\OnboardFormRequest;
 use Exception;
 
 class OnboardForm extends Component
@@ -18,7 +19,7 @@ class OnboardForm extends Component
     public $user_email;
     public $company_name;
     public $cnpj;
-    public $size = ''; 
+    public $size = '';
     public $industry;
     public $about;
     public $cep;
@@ -34,11 +35,11 @@ class OnboardForm extends Component
     public function mount()
     {
         $user = session('userDTO');
-    
+
         if (!$user) {
             return redirect()->route('login'); // Redireciona para login se não houver sessão
         }
-    
+
         $this->user_id = $user->id ?? null;
         $this->user_nickname = $user->nickname ?? '';
         $this->user_name = $user->name ?? '';
@@ -48,9 +49,9 @@ class OnboardForm extends Component
     {
         $this->resetErrorBag('cep');
         $this->loading = true; // Inicia o loading
-    
+
         $data = CepService::buscarEndereco($this->cep);
-    
+
         if (!$data) {
             $this->addError('cep', 'CEP não encontrado ou inválido.');
         } else {
@@ -58,7 +59,7 @@ class OnboardForm extends Component
             $this->neighborhood = $data['bairro'] ?? '';
             $this->city = $data['localidade'] ?? '';
         }
-    
+
         $this->loading = false; // Finaliza o loading
     }
 
@@ -109,38 +110,46 @@ class OnboardForm extends Component
 
     protected function validateStep()
     {
-        $rules = [
+        $formRequest = new OnboardFormRequest();
+        $rules = $formRequest->rules();
+        $messages = $formRequest->messages();
+
+        // Converte a string de regras do CNPJ em um array
+        $cnpjRules = is_array($rules['cnpj']) ? $rules['cnpj'] : explode('|', $rules['cnpj']);
+
+        // Adiciona a função de validação personalizada ao array de regras
+        $cnpjRules[] = function ($attribute, $value, $fail) {
+            try {
+                CnpjService::consultarCnpj($value);
+            } catch (Exception $e) {
+                $fail($e->getMessage());
+            }
+        };
+
+        $stepRules = [
             1 => [
-                'company_name' => 'required|string|max:255',
-                'cnpj' => ['required', 'string', 'max:18', function ($attribute, $value, $fail) {
-                    try {
-                        // Chama o método estático do CnpjService
-                        CnpjService::consultarCnpj($value);
-                    } catch (Exception $e) {
-                        $fail($e->getMessage());
-                    }
-                }],
-                'size' => 'required|string|max:255',
-                'industry' => 'required|string|max:255',
-                'about' => 'required|string|max:1000',
+                'company_name' => $rules['company_name'],
+                'cnpj' => $cnpjRules, // Usa o array de regras corrigido
+                'size' => $rules['size'],
+                'industry' => $rules['industry'],
+                'about' => $rules['about'],
             ],
             2 => [
-                'cep' => 'required|string|max:9',
-                'street' => 'required|string|max:255',
-                'number' => 'required|string|max:10',
-                'complement' => 'nullable|string|max:255',
-                'neighborhood' => 'required|string|max:255',
-                'city' => 'required|string|max:255',
+                'cep' => $rules['cep'],
+                'street' => $rules['street'],
+                'number' => $rules['number'],
+                'complement' => $rules['complement'],
+                'neighborhood' => $rules['neighborhood'],
+                'city' => $rules['city'],
             ],
             3 => [
-                'social_media' => 'nullable|string|max:255',
-                'website' => 'nullable|url|max:255',
+                'social_media' => $rules['social_media'],
+                'website' => $rules['website'],
             ],
         ];
 
-        $this->validate($rules[$this->currentStep]);
+        $this->validate($stepRules[$this->currentStep], $messages);
     }
-
     public function render()
     {
         return view('livewire.onboard-form');
