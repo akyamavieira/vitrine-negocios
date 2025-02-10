@@ -18,7 +18,7 @@ class OnboardForm extends Component
     public $user_email;
     public $company_name;
     public $cnpj;
-    public $size;
+    public $size = ''; 
     public $industry;
     public $about;
     public $cep;
