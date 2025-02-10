@@ -17,7 +17,7 @@ class CepService
         try {
             Log::info("Buscando endereço para CEP: {$cep}");
 
-            $response = Http::get("https://viacep.com.br/ws/{$cep}/json/");
+            $response = Http::withoutVerifying()->get("https://viacep.com.br/ws/{$cep}/json/");
 
             if ($response->failed()) {
                 Log::error("Falha na requisição para o CEP {$cep}: " . $response->body());

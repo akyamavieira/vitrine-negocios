@@ -14,5 +14,3 @@ apt install -q -y libpq-dev && \
 docker-php-ext-install pdo_pgsql pgsql
 
 composer install && composer update
-
-apt-get update && apt-get install -y ca-certificates
