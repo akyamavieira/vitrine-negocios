@@ -10,7 +10,6 @@ use App\Services\CepService;
 use App\Services\CnpjService;
 use Exception;
 
-
 class OnboardForm extends Component
 {
     public $user_id;
@@ -91,13 +90,7 @@ class OnboardForm extends Component
             'id' => Str::uuid(),
             'fk_user' => $user->id,
             'company_name' => $this->company_name,
-            'cnpj' => ['required', 'string', 'max:18', function ($attribute, $value, $fail) {
-                try {
-                    CnpjService::consultarCnpj($value);
-                } catch (Exception $e) {
-                    $fail($e->getMessage());
-                }
-            }],
+            'cnpj' => $this->cnpj,
             'size' => $this->size,
             'industry' => $this->industry,
             'about' => $this->about,
@@ -119,7 +112,14 @@ class OnboardForm extends Component
         $rules = [
             1 => [
                 'company_name' => 'required|string|max:255',
-                'cnpj' => 'required|string|max:18',
+                'cnpj' => ['required', 'string', 'max:18', function ($attribute, $value, $fail) {
+                    try {
+                        // Chama o método estático do CnpjService
+                        CnpjService::consultarCnpj($value);
+                    } catch (Exception $e) {
+                        $fail($e->getMessage());
+                    }
+                }],
                 'size' => 'required|string|max:255',
                 'industry' => 'required|string|max:255',
                 'about' => 'required|string|max:1000',
